@@ -5,6 +5,7 @@
 
 typedef int bool;
 typedef int TIPOCHAVE;
+typedef node* pont;
 
 typedef struct aux {
     TIPOCHAVE chave;
@@ -13,9 +14,7 @@ typedef struct aux {
     
 } node;
 
-typedef node* pont;
-
-pont inicializa() {
+pont inicializa() { // link
     return(NULL);
 }
 
@@ -104,6 +103,17 @@ pont removeNode(pont raiz, TIPOCHAVE key) {
             q = q->dir;
         }
     }
+    if(!pai) {
+        free(no);
+        return(q);
+    }
+    if(key < pai->chave)
+        pai->esq = q;
+    else
+        pai->dir = q;
+
+    free(no);
+    return(raiz);
 }
 
 int main(){
