@@ -123,6 +123,11 @@ int main(){
 
     no = criarNode(12);
     r =  adiciona(r,no);
+    r = adiciona(r, no);
+    r = adiciona(r, no);
+    r = adiciona(r, no);
+
+    exibirArvore(r);
 
     return 0;
 }
