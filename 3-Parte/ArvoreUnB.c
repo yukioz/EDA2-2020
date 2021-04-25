@@ -1,112 +1,83 @@
 #include <stdio.h>
 #include <stdlib.h>
- 
-/* A binary tree node has data, pointer to left child
-   and a pointer to right child */
-struct node {
-    int data;
-    struct node* left;
-    struct node* right;
-};
- 
-/* Helper function that allocates a new node with the
-   given data and NULL left and right pointers. */
-struct node* newNode(int data)
+
+typedef struct _arvore
 {
-    struct node* node
-        = (struct node*)malloc(sizeof(struct node));
-    node->data = data;
-    node->left = NULL;
-    node->right = NULL;
- 
-    return (node);
+    int info;
+    struct _arvore *esq;
+    struct _arvore *dir;
+} Arvore;
+
+/*Cria uma arvore vazia!*/
+Arvore *cria_arv_vazia()
+{
+    return NULL;
 }
 
-struct node* inserir (struct node *a, int v){
-    if(a == NULL){
-        a=(struct node*)malloc(sizeof(struct node));
-        a->data = v;
-        a->left = NULL;
-        a->right = NULL;
+/*Cria um no em uma arvore!*/
+Arvore *inserir(Arvore *a, int v)
+{
+    if (a == NULL)
+    {
+        a = (Arvore *)malloc(sizeof(Arvore)); // criação do HEAD
+        a->info = v;
+        a->esq = NULL;
+        a->dir = NULL;
     }
-    else if(v < a->data){
-        a->left = inserir(a->left,v);
+    else if (v < a->info)
+    {
+        a->esq = inserir(a->esq, v);
     }
-    else{
-        a->right = inserir(a->right,v);
+    else
+    {
+        a->dir = inserir(a->dir, v);
     }
     return a;
 }
- 
-/* Given a binary tree, print its nodes according to the
-  "bottom-up" postorder traversal. */
-void printPostorder(struct node* node)
+
+void pre_ordem(Arvore *arv)
 {
-    if (node == NULL)
-        return;
- 
-    // first recur on left subtree
-    printPostorder(node->left);
- 
-    // then recur on right subtree
-    printPostorder(node->right);
- 
-    // now deal with the node
-    printf("%d ", node->data);
+    if (arv != NULL)
+    {
+        printf("%d ", arv->info);
+        pre_ordem(arv->esq);
+        pre_ordem(arv->dir);
+    }
 }
- 
-/* Given a binary tree, print its nodes in inorder*/
-void printInorder(struct node* node)
+
+void in_ordem(Arvore *arv)
 {
-    if (node == NULL)
-        return;
- 
-    /* first recur on left child */
-    printInorder(node->left);
- 
-    /* then print the data of node */
-    printf("%d ", node->data);
- 
-    /* now recur on right child */
-    printInorder(node->right);
+    if (arv != NULL)
+    {
+        in_ordem(arv->esq);
+        printf("%d ", arv->info);
+        in_ordem(arv->dir);
+    }
 }
- 
-/* Given a binary tree, print its nodes in preorder*/
-void printPreorder(struct node* node)
+
+void pos_ordem(Arvore *arv)
 {
-    if (node == NULL)
-        return;
- 
-    /* first print data of node */
-    printf("%d ", node->data);
- 
-    /* then recur on left sutree */
-    printPreorder(node->left);
- 
-    /* now recur on right subtree */
-    printPreorder(node->right);
+    if (arv != NULL)
+    {
+        pos_ordem(arv->esq);
+        pos_ordem(arv->dir);
+        printf("%d ", arv->info);
+    }
 }
- 
-/* Driver program to test above functions*/
+
 int main()
 {
-    struct node* root;
 
+    Arvore *a = cria_arv_vazia();
     int num;
 
-    while(scanf("%d", &num) != EOF){
-
-      root = inserir(root, num);
+    while (scanf("%d", &num) != EOF) // Isso funciona
+    {
+        a = inserir(a, num);
     }
-    printf("\nPreorder traversal of binary tree is \n");
-    printPreorder(root);
- 
-    printf("\nInorder traversal of binary tree is \n");
-    printInorder(root);
- 
-    printf("\nPostorder traversal of binary tree is \n");
-    printPostorder(root);
- 
-    getchar();
+
+    in_ordem(a);
+    printf("\n");
+
     return 0;
 }

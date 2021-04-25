@@ -59,7 +59,7 @@ void quickSortM3(int *v, int l, int r){
         swap(&v[l], &v[r-1]);
 
         if(v[l] < v[r]){
-            swap(&v[r], &v[r]);
+            swap(&v[l], &v[r]); // l ou r no primeiro?
 
             if(v[r-1] < v[r])
                 swap(&v[r-1], &v[r]);
