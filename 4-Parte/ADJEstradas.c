@@ -31,7 +31,7 @@ typedef struct graph {
     int V;
     int E;
     link *adj;
-};
+}graph;
 
 typedef struct graph *Graph;
 

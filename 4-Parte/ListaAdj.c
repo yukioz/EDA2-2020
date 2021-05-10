@@ -70,11 +70,11 @@ void GraphRemoveE(Graph G, Edge e) {
     int v= e.v;
     int w = e.w;
 
-    if(G->adj[v][w] == 1)
+    if(G->adj[v] == 1)
       G->E--;
 
-    G->adj[v][w] = 0;
-    G->adj[w][v] = 0;
+    G->adj[v] = 0;
+    G->adj[w] = 0;
 }
 
 int GraphEdges(Graph G, Edge a[]) {
@@ -97,5 +97,4 @@ void dfsR(Graph G, Edge e) {
 
   int t;
   int w = e.w;
-
 }

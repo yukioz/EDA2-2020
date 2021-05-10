@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 static int visited[1000];
+static int julius[20001]={};
 
 // Pode ser substituido por "v" e "w", precisa mudar os parametros! ex: (graph G, int v, int w) -> DAKI... 
 typedef struct Edge {
@@ -155,51 +156,48 @@ int GRAPHreach( Graph G, int s, int t) {
 
 int main() {
 
-  int V;
-  scanf("%d", &V);
-
-  Graph matriz = GraphInit(V);
-
+  int N, M, J;
+  int conect;
+  int num;
   Edge linha;
-  int v, w, d;
-  
-  // scanf("%d %d %d", &v, &w, &d);
+  int aqui;
 
-  while(1) {
+  scanf("%d %d %d", &N, &M, &J);
 
-    scanf("%d %d %d", &v, &w, &d);
+  Graph matrix = GraphInit(N);
 
-    if(v == 0 && w == 0 && d == 0 )
-      break;
+  for(int i=0; i<N; i++){
+    scanf("%d", &conect);
+    linha.v = i;
 
-    linha.v = v;
-    linha.w = w;
-    // linha = EDGE(v, w);
+    for(int j=0; j<conect; j++) {
+      scanf("%d", &num);
+      linha.w = num;
 
-    if(d == 1) {
-      GraphInsertEUni(matriz, linha);
-    } else {
-      GraphInsertE(matriz, linha);
+      GraphInsertEUni(matrix, linha);
     }
   }
 
-  int localA, localB;
+  for(int i=0; i<M; i++) {
 
-  while(scanf("%d %d", &localA, &localB) != EOF) {
+    scanf("%d", &aqui);
+    julius[aqui] = 1;
 
-    int ida = GRAPHreach(matriz, localA, localB);
-    int volta = GRAPHreach(matriz, localB, localA);
-
-    if(ida &&  volta) {
-      printf("Ida e volta\n");
-    } else if(ida) {
-      printf("Apenas Ida\n");
-    } else if(volta) {
-      printf("Apenas Volta\n");
-    } else {
-      printf("Impossibru\n");
+    for(int j=0; j<2001; j++){
+      if(matrix->adj[aqui][j] == 1) {
+        julius[j]=1;
+      }
     }
+  }
 
+  for(int i=0; i<J; i++) {
+    scanf("%d", &num);
+
+    if(julius[num] == 1) {
+      printf("Eu vou estar la\n");
+    } else {
+      printf("Nao vou estar la\n");
+    }
   }
 
   return 0;

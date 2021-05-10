@@ -24,6 +24,7 @@ typedef struct graph {
     int V;
     int E;
     int **adj;
+    int **tc; // matriz auxiliardeclarada
 } graph;
 typedef struct graph *Graph;
 
@@ -41,12 +42,12 @@ static int **MATRIXint(int r, int c, int val) {
     }
   }
 
-  return m; // retorna um a matriz m.
+  return m; // retorna uma matriz m.
 }
 
 Graph GraphInit(int V) {
 
-    // Alocar struct tio grafo
+    // Alocar struct tipo grafo
     Graph G = malloc(sizeof(*G));
 
     // setar os valores
@@ -101,7 +102,6 @@ void GraphRemoveEUni(Graph G, Edge e) {
       G->E--;
 
     G->adj[v][w] = 0;
-    G->adj[w][v] = 0;
 }
 
 int GraphEdges(Graph G, Edge a[]) {
@@ -132,15 +132,36 @@ void GRAPHshow(Graph G) {
   }
 }
 
-static void reachR(Graph G, int v) {
+/*static void reachR(Graph G, int v) {
   visited[v] = 1;
   for(int w=0; w<G->V; w++) {
     if(G->adj[v][w] == 1 && visited[w] == 0)
       reachR(G, w);
   }
+}*/
+
+void Graphtc (Graph G){
+    int i, s, t;
+    G->tc = MATRIXint(G->V, G->V, 0);
+    for (s=0; s < G->V; s++) // copia a matriz
+        for (t=0; t < G->V; t++)
+            G->tc[s][t] = G->adj[s][t];
+
+    for (s=0; s < G->V; s++) G->tc[s][s] = 1; // coloca 1 na diagonal da matriz
+
+    for (i=0; i < G->V; i++) // 
+        for (s=0; s < G->V; s++)
+            if (G->tc[s][i] == 1) // verififica cada ponto da matriz é igual a 1
+                for (t=0; t < G->V; t++)
+                    if (G->tc[i][t] == 1) // Se na linha "i" tiver algum 1, a coluna "i" na posição t também será 1.
+                        G->tc[s][t] = 1;
 }
 
-int GRAPHreach( Graph G, int s, int t) {
+int GRAPHReach (Graph G, int s, int t){             // Saber se vértice s possui caminho ao vértice t
+    return G->tc[s][t];
+}
+
+/*int GRAPHreach( Graph G, int s, int t) {
   for(int v=0; v<G->V; v++)
     visited[v]=0;
 
@@ -151,7 +172,7 @@ int GRAPHreach( Graph G, int s, int t) {
   }
 
   return 1;
-}
+}*/
 
 int main() {
 
@@ -162,8 +183,6 @@ int main() {
 
   Edge linha;
   int v, w, d;
-  
-  // scanf("%d %d %d", &v, &w, &d);
 
   while(1) {
 
@@ -174,7 +193,6 @@ int main() {
 
     linha.v = v;
     linha.w = w;
-    // linha = EDGE(v, w);
 
     if(d == 1) {
       GraphInsertEUni(matriz, linha);
@@ -184,14 +202,14 @@ int main() {
   }
 
   int localA, localB;
-
+  Graphtc(matriz);
   while(scanf("%d %d", &localA, &localB) != EOF) {
 
-    int ida = GRAPHreach(matriz, localA, localB);
-    int volta = GRAPHreach(matriz, localB, localA);
+    int ida = GRAPHReach(matriz, localA, localB); // acessa a posição da matriz, se for 1 é possível ir.
+    int volta = GRAPHReach(matriz, localB, localA); // acessa a posição da matriz, se for 1 é possível ir.
 
     if(ida &&  volta) {
-      printf("Ida e volta\n");
+      printf("Ida e Volta\n");
     } else if(ida) {
       printf("Apenas Ida\n");
     } else if(volta) {

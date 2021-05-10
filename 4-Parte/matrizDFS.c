@@ -2,6 +2,9 @@
 #include <stdlib.h>
 
 static int visited[1000];
+int pre[1000];
+int pa[1000];
+static int cnt;
 
 // Pode ser substituido por "v" e "w", precisa mudar os parametros! ex: (graph G, int v, int w) -> DAKI... 
 typedef struct Edge {
@@ -153,53 +156,85 @@ int GRAPHreach( Graph G, int s, int t) {
   return 1;
 }
 
+static void dfsR(Graph G, int v) {
+  pre[v] = cnt++;
+
+  for(int a; a<G->V; a++) {
+    int w = G->adj[v][a];
+
+    if(pre[w] == -1 && w != 0) {
+      pa[w] = v;
+      dfsR(G, w);
+    }
+  }
+}
+
+void GRAPHdfs(Graph G) {
+  cnt = 0;
+
+  for(int v=0; v<G->V; v++) {
+    pre[v] = -1;
+  }
+  for(int v=0; v<G->V; v++) {
+    if(pre[v] == -1) {
+      pa[v] = v;
+      dfsR(G, v);
+    }
+  }
+}
+
 int main() {
 
-  int V;
-  scanf("%d", &V);
+  printf("digite um número: ");
+  int x;
+  scanf("%d", &x);
 
-  Graph matriz = GraphInit(V);
+  Graph matriz = GraphInit(x);
+
+  GRAPHshow(matriz);
 
   Edge linha;
-  int v, w, d;
-  
-  // scanf("%d %d %d", &v, &w, &d);
+  int a, b;
+  int y=5;
 
-  while(1) {
+  while(y--) {
 
-    scanf("%d %d %d", &v, &w, &d);
+  printf("digite 2 números: ");
+  scanf("%d %d", &a, &b);
+  linha.v = a;
+  linha.w = b;
 
-    if(v == 0 && w == 0 && d == 0 )
-      break;
+  GraphInsertEUni(matriz, linha);
 
-    linha.v = v;
-    linha.w = w;
-    // linha = EDGE(v, w);
+  printf("\n");
 
-    if(d == 1) {
-      GraphInsertEUni(matriz, linha);
-    } else {
-      GraphInsertE(matriz, linha);
+  GRAPHshow(matriz);
+
+  }
+
+  int z=3;
+
+  while(z--) {
+    printf("digite 2 locais: ");
+    scanf("%d %d", &a, &b);
+
+    int real = GRAPHreach(matriz, a, b);
+
+    if(real) {
+      printf("esta conectado\n");  
+    } else{
+      printf("nao ta conectao\n");
     }
   }
 
-  int localA, localB;
+  GRAPHdfs(matriz);
 
-  while(scanf("%d %d", &localA, &localB) != EOF) {
+  for(int i=0; i<x; i++){
+    printf("%d\n", pre[i]);
+  }
 
-    int ida = GRAPHreach(matriz, localA, localB);
-    int volta = GRAPHreach(matriz, localB, localA);
-
-    if(ida &&  volta) {
-      printf("Ida e volta\n");
-    } else if(ida) {
-      printf("Apenas Ida\n");
-    } else if(volta) {
-      printf("Apenas Volta\n");
-    } else {
-      printf("Impossibru\n");
-    }
-
+  for(int i=0; i<x; i++){
+    printf("%d\n", pa[i]);
   }
 
   return 0;
